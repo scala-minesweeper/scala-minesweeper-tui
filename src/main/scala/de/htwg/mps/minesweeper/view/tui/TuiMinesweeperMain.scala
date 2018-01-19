@@ -15,7 +15,7 @@ object TuiMinesweeperMain {
 
   val gameController: ActorRef = actorResolver.resolveGameController()
 
-  val tui: ActorRef = actorSystem.actorOf(Props(new TuiActor(gameController, publisher)), "test")
+  val tui: ActorRef = actorSystem.actorOf(Props(new TuiActor(gameController, publisher)))
 
   def main(args: Array[String]): Unit = {
     while (true) {
