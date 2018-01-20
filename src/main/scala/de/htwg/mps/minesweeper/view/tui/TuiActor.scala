@@ -7,7 +7,9 @@ case class ProcessTuiInput(input: String)
 
 class TuiActor(controller: ActorRef, publisher: ActorRef) extends Actor {
 
-  publisher ! RegisterObserver
+  override def postStop(): Unit = publisher ! DeregisterObserver
+
+  override def preStart(): Unit = publisher ! RegisterObserver
 
   override def receive: Receive = {
     case ProcessTuiInput(input) => processInput(input)
