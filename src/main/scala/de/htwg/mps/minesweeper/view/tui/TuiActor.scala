@@ -11,6 +11,8 @@ class TuiActor(controller: ActorRef, publisher: ActorRef) extends Actor {
 
   override def preStart(): Unit = publisher ! RegisterObserver
 
+  sys.addShutdownHook(postStop())
+
   override def receive: Receive = {
     case ProcessTuiInput(input) => processInput(input)
     case FieldUpdate(_, _, _, grid) => println(GridTuiPrinter(grid).print())
