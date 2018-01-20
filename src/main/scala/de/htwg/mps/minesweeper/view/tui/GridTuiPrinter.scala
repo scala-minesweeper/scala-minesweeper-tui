@@ -1,15 +1,15 @@
 package de.htwg.mps.minesweeper.view.tui
 
 import de.htwg.mps.minesweeper.api.events.GridModel
-import de.htwg.mps.minesweeper.view.utils.{NumberToStringUtils, NumberUtils}
+import de.htwg.mps.minesweeper.view.utils.NumberToStringUtils
 
 case class GridTuiPrinter(grid: GridModel) extends TuiPrinter {
 
   def print(): String = {
     val cols = grid.size._2
     val rows = grid.size._1
-    val rowDigits = NumberUtils.numberOfDigits(rows - 1)
-    val colDigits = NumberUtils.numberOfDigits(cols - 1)
+    val rowDigits = NumberToStringUtils.stringLength(rows - 1)
+    val colDigits = NumberToStringUtils.stringLength(cols - 1)
     val string = 0.until(colDigits).foldRight(" ")((line, string) =>
       string + "\n" + (" " * (rowDigits + 1)) + "| " + 0.until(cols)
         .map(col => NumberToStringUtils.getCharStringAtOrElse(col, line, " "))

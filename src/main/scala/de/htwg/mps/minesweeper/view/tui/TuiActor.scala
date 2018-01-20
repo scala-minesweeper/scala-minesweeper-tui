@@ -17,8 +17,8 @@ class TuiActor(controller: ActorRef, publisher: ActorRef) extends Actor {
     case ProcessTuiInput(input) => processInput(input)
     case FieldUpdate(_, _, _, grid) => println(GridTuiPrinter(grid).print())
     case GridUpdate(grid) => println(GridTuiPrinter(grid).print())
-    case GameWon(game) => println(game.gameResult)
-    case GameLost(game) => println(game.gameResult)
+    case GameWon(game) => println(game.gameResult.getOrElse(""))
+    case GameLost(game) => println(game.gameResult.getOrElse(""))
     case GameStart(game) =>
       println("\n==========================\nMinesweeper\n==========================")
       printTui(game.grid)
@@ -33,7 +33,7 @@ class TuiActor(controller: ActorRef, publisher: ActorRef) extends Actor {
     println("You can choose following actions")
     println(" o <row> <col> - open a cell")
     println(" ! <row> <col> - toggle cell mark (#: flagged, ?: question marked)")
-    println(" r - restart the game with new fields")
+    println(" r <rows> <cols> <bombs> restart the game with new fields")
   }
 
   private def printTui(message: String): Unit = {
@@ -45,6 +45,8 @@ class TuiActor(controller: ActorRef, publisher: ActorRef) extends Actor {
       case "r" => controller ! StartGame(4, 5, 3)
       case _ =>
         input.split("\\s+").toList match {
+          case "r" :: rows :: columns :: bombs :: Nil =>
+            controller ! StartGame(rows.toInt, columns.toInt, bombs.toInt)
           case "o" :: row :: column :: Nil =>
             controller ! OpenField(row.toInt, column.toInt)
           case "!" :: row :: column :: Nil =>
